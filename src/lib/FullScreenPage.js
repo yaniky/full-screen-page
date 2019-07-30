@@ -4,6 +4,9 @@
  */
 
 export class FullScreenPage {
+    /**
+     * @param {container: el, class: string, change: function(curren), speed: number} options
+     */
     constructor(options) {
         this._options = options;
         this._els = [];
@@ -16,6 +19,7 @@ export class FullScreenPage {
         };
         this._nowAni = 0;
         this._maxMove = 0;
+        this._movePer = this._options.speed || 10;
         this._moveAniTime = 60;
         this._pageHeight = this._options.container.getBoundingClientRect().height;
         this._initPage();
@@ -77,9 +81,12 @@ export class FullScreenPage {
 
     _addEndEvent() {
         document.addEventListener("touchend", () => {
+            const nowPosition = this._getNowPosition();
+            const offset = nowPosition - parseInt(nowPosition, 10);
+
             switch (this._nowAni) {
             case this._AniWay.Down: {
-                if (parseInt(this._getNowPosition(), 10) === this._nowActive) {
+                if (offset > 0.9 || parseInt(this._getNowPosition(), 10) === this._nowActive) {
                     this._toNowPage();
                 } else {
                     this._toLastPage();
@@ -87,7 +94,7 @@ export class FullScreenPage {
                 break;
             }
             case this._AniWay.Up: {
-                if (parseInt(this._getNowPosition(), 10) !== this._nowActive) {
+                if (offset < 0.1 || parseInt(nowPosition, 10) !== this._nowActive) {
                     this._toNowPage();
                 } else {
                     this._toNextPage();
@@ -131,9 +138,62 @@ export class FullScreenPage {
         this._updatePage();
     }
 
+    /**
+     *
+     * @param {number} from
+     * @param {number} to
+     * @param {number} direction - -1向上, 1向下
+     */
+    _moveToAni(from, to, direction) {
+        let next = from + direction * this._movePer;
+
+        switch (direction) {
+        case -1: {
+            // 向上
+            if (next < to) {
+                next = to;
+            }
+            break;
+        }
+        case 1: {
+            // 向下
+            if (next > to) {
+                next = to;
+            }
+            break;
+        }
+        default: {
+            break;
+        }
+        }
+        this._els[0].style.marginTop = next + "px";
+        if (next !== to) {
+            setTimeout(() => {
+                this._moveToAni(next, to, direction);
+            }, 1);
+        } else {
+            this._afterChange();
+        }
+    }
+
     _updatePage() {
         const move = this._nowActive * this._pageHeight;
+        const from = Number(this._els[0].style.marginTop.replace("px", ""));
+        const to = -1 * move;
 
-        this._els[0].style.marginTop = -1 * move + "px";
+
+        let direction = 1;
+
+        if (to < from) {
+            direction = -1;
+        }
+        this._moveToAni(from, to, direction);
+        // this._els[0].style.marginTop = -1 * move + "px";
+    }
+
+    _afterChange() {
+        if (this._options.change) {
+            this._options.change(this._nowActive);
+        }
     }
 }

@@ -14,7 +14,10 @@ export default {
     mounted() {
         new FullScreenPage({
             container: this.$refs.container,
-            class: "full-page"
+            class: "full-page",
+            change: function(cur) {
+                console.log(cur)
+            }
         });
     }
 }

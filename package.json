@@ -1,6 +1,6 @@
 {
-  "name": "full-screen-page",
-  "version": "0.0.1",
+  "name": "@yaniky/full-page",
+  "version": "0.0.2",
   "description": "全屏翻页",
   "main": "dist/js/main.js",
   "scripts": {
