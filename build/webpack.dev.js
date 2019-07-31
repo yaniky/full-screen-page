@@ -8,7 +8,8 @@ module.exports = merge(common, {
     entry: "./src/index-dev.js",
     devtool: "inline-source-map",
     devServer: {
-        contentBase: "../dist"
+        contentBase: "../dist",
+        host: "0.0.0.0"
     },
     output: {
         filename: "js/[name].[hash].js",

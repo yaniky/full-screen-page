@@ -1,5 +1,5 @@
-import { FullScreenPage } from "@/lib/FullScreenPage.js";
+import { FullPage } from "@/lib/FullScreenPage.js";
 
 export {
-    FullScreenPage
+    FullPage
 };

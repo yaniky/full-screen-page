@@ -8,11 +8,11 @@
     </div>
 </template>
 <script>
-import { FullScreenPage } from "@/lib/FullScreenPage.js";
+import { FullPage } from "@/lib/FullScreenPage.js";
 export default {
     name: "FullPage",
     mounted() {
-        new FullScreenPage({
+        new FullPage({
             container: this.$refs.container,
             class: "full-page",
             change: function(cur) {

@@ -3,7 +3,7 @@
  * @description 全屏翻页组件
  */
 
-export class FullScreenPage {
+export class FullPage {
     /**
      * @param {container: el, class: string, change: function(curren), speed: number} options
      */
@@ -49,6 +49,7 @@ export class FullScreenPage {
 
     _addMoveLintener() {
         document.addEventListener("touchmove", e => {
+            e.preventDefault();
             const newY = e.changedTouches[0].pageY;
             const moveY = newY - this._oldPageY;
 
