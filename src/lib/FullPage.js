@@ -5,10 +5,20 @@
 
 export class FullPage {
     /**
-     * @param {container: el, class: string, change: function(curren), speed: number} options
+     * @param {container: el, class: string, change: function(curren), speed: numberm baseWith: number, baseHeight: number} options
      */
     constructor(options) {
-        this._options = options;
+        const defaultOption = {
+            container: null,
+            class: "",
+            change: function() {},
+            speed: 10,
+            baseWith: 750,
+            baseHeight: 1334,
+            setPageRatio: false
+        };
+
+        this._options = Object.assign(defaultOption, options);
         this._els = [];
         this._nowActive = 0;
         this._body = document.body;
@@ -34,11 +44,43 @@ export class FullPage {
         this._body.style.margin = 0;
         this._els = document.getElementsByClassName(this._options.class);
         this._maxMove = this._pageHeight * (this._els.length - 1);
+        const width = this._options.container.getBoundingClientRect().width;
+        const height = this._pageHeight;
+
+        let newWidth = width;
+
+        let newHeight = height;
+
+        if (this._options.setPageRatio) {
+            if (width / height > this._options.baseWith / this._options.baseHeight) {
+                newWidth = this._options.baseWith / this._options.baseHeight * height;
+            }
+        }
         for (const el of this._els) {
             el.style.position = "relative";
-            el.style.width = "100%";
-            el.style.height = this._pageHeight + "px";
+            el.style.margin = "auto";
+            el.style.width = newWidth + "px";
+            el.style.height = newHeight + "px";
         }
+        this._initRootSize(newWidth);
+    }
+
+    _initRootSize(sWidth) {
+        const rootEl = document.documentElement;
+        const baseWidth = 750;
+        const baseSize = 100;
+
+        function screenChange() {
+            if (sWidth && rootEl) {
+                rootEl.style.fontSize = sWidth * baseSize / baseWidth + "px";
+            } else if (rootEl) {
+                rootEl.style.fontSize = baseSize + "px";
+            }
+        }
+        screenChange();
+        window.addEventListener("resize", function() {
+            screenChange();
+        });
     }
 
     _addStartEventListen() {
@@ -70,6 +112,8 @@ export class FullPage {
             }
 
             this._oldPageY = newY;
+        }, {
+            passive: false
         });
     }
 

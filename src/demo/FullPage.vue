@@ -8,7 +8,7 @@
     </div>
 </template>
 <script>
-import { FullPage } from "@/lib/FullScreenPage.js";
+import { FullPage } from "@/index.js";
 export default {
     name: "FullPage",
     mounted() {
@@ -17,7 +17,8 @@ export default {
             class: "full-page",
             change: function(cur) {
                 console.log(cur)
-            }
+            },
+            setPageRatio: true
         });
     }
 }
@@ -28,5 +29,6 @@ export default {
         position: fixed;
         width: 100%;
         height: 100%;
+        color: #fff;
     }
 </style>
